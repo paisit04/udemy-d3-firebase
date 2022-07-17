@@ -1,37 +1,29 @@
-const canvas = d3.select('.canvas');
+const data = [
+  { width: 200, height: 100, fill: 'purple' },
+  { width: 100, height: 60, fill: 'pink' },
+  { width: 50, height: 30, fill: 'red' },
+];
 
-const svg = canvas.append('svg').attr('height', 600).attr('width', 600);
+// select svg container first
+const svg = d3.select('svg');
 
-const group = svg.append('g').attr('transform', 'translate(50, 100)');
+d3.json('planets.json').then((data) => {
+  // Join data to circs
+  const circs = svg.selectAll('circle').data(data);
 
-// append shapes to svg container
-group
-  .append('rect')
-  .attr('width', 200)
-  .attr('height', 100)
-  .attr('fill', 'blue')
-  .attr('x', 20)
-  .attr('y', 20);
+  // add attrs to circs already in the DOM
+  circs
+    .attr('cy', 200)
+    .attr('cx', (d) => d.distance)
+    .attr('r', (d) => d.radius)
+    .attr('fill', (d) => d.fill);
 
-group
-  .append('circle')
-  .attr('r', 50)
-  .attr('cx', 300)
-  .attr('cy', 70)
-  .attr('fill', 'pink');
-
-group
-  .append('line')
-  .attr('x1', 370)
-  .attr('x2', 400)
-  .attr('y1', 20)
-  .attr('y2', 120)
-  .attr('stroke', 'red');
-
-svg
-  .append('text')
-  .attr('x', 20)
-  .attr('y', 200)
-  .attr('fill', 'grey')
-  .text('hello, ninjas!')
-  .style('font-family', 'arial');
+  // append the enter selection to the DOM
+  circs
+    .enter()
+    .append('circle')
+    .attr('cy', 200)
+    .attr('cx', (d) => d.distance)
+    .attr('r', (d) => d.radius)
+    .attr('fill', (d) => d.fill);
+});
